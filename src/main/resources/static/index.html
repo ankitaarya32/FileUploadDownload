@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>Upload/Download File </title>
+<script>
+function loadDoc() {
+	var baseurl=window.location.origin;
+	  const xhttp = new XMLHttpRequest();
+	  xhttp.onload = function() {
+		  var output=""
+		  var response_data= JSON.parse(this.responseText);
+		 for(var i in response_data){
+			 var url=baseurl+"/files/"+response_data[i];
+			 output += '<br><a href="'+url+'" target=_blank>'+url+'</a>';
+		 }
+	    document.getElementById("output").innerHTML = output;
+	    }
+	  xhttp.open("GET", baseurl+"/files", true);
+	  xhttp.send();
+	}
+	
+	function validate(){
+		var fileSize=  document.getElementById("data").files[0].size;
+		var filetype=  document.getElementById("data").files[0].type;
+		if(fileSize > 0 && fileSize <= 1048576 && filetype == "application/pdf")
+		return true;
+		alert("Please upload pdf file of length not more than 1MB");
+		return false;
+	}
+</script>
+</head>
+<body onload="loadDoc()">
+<h1>My Test Template</h1>
+
+
+<form enctype="multipart/form-data" method="post" action="/files" onload="loadDoc()" onsubmit = "return(validate());">
+Upload File : <input type="file" name="data" id="data" accept=".pdf" required="required">
+<input type="submit" value="Upload">
+</form>
+<div id="output"></div>
+</body>
+</html>
